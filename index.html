@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BTS — Complete Discography</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Serif+KR:wght@300;400;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0a;
+    --fg: #f0ede6;
+    --muted: #888;
+    --border: rgba(255,255,255,0.08);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    padding: 2rem;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 50% 40%, #1a0533 0%, #0a0a0a 70%);
+  }
+  .hero-noise {
+    position: absolute; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    opacity: 0.4;
+  }
+  .hero-content { position: relative; z-index: 1; }
+  .hero-eyebrow {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.2s forwards;
+  }
+  .hero-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(80px, 16vw, 180px);
+    letter-spacing: 0.04em;
+    line-height: 0.9;
+    color: #fff;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.4s forwards;
+  }
+  .hero-title span {
+    background: linear-gradient(135deg, #a78bfa, #f472b6, #fb923c);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .hero-sub {
+    margin-top: 1.5rem;
+    font-size: 14px;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.6s forwards;
+  }
+  .hero-scroll {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    color: var(--muted);
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    opacity: 0;
+    animation: fadeUp 0.8s 1s forwards;
+  }
+  .scroll-line {
+    width: 1px; height: 40px;
+    background: linear-gradient(to bottom, transparent, var(--muted));
+    animation: scrollPulse 2s infinite;
+  }
+  @keyframes scrollPulse { 0%,100%{opacity:0.3} 50%{opacity:1} }
+
+  /* ── NAV ── */
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(10,10,10,0.9);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    overflow-x: auto;
+  }
+  .nav-inner {
+    display: flex;
+    gap: 0;
+    max-width: 1400px;
+    margin: 0 auto;
+    white-space: nowrap;
+  }
+  .nav-era {
+    padding: 14px 20px;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+    flex-shrink: 0;
+  }
+  .nav-era:hover { color: var(--fg); }
+  .nav-era.active { color: var(--fg); border-bottom-color: var(--fg); }
+
+  /* ── MAIN ── */
+  main {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 4rem 2rem 8rem;
+  }
+
+  /* ── ERA HEADER ── */
+  .era-block { margin-bottom: 6rem; }
+  .era-header {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    margin-bottom: 2.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .era-label {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 13px;
+    letter-spacing: 0.2em;
+    color: var(--muted);
+  }
+  .era-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(28px, 4vw, 42px);
+    letter-spacing: 0.05em;
+    color: var(--fg);
+  }
+
+  /* ── ALBUM CARD ── */
+  .album-grid {
+    display: grid;
+    gap: 2rem;
+  }
+  .album-card {
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    background: #111;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .album-card:hover { transform: translateY(-2px); }
+  .album-card-header {
+    padding: 2rem 2rem 1.5rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 1.5rem;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .album-cover {
+    width: 80px;
+    height: 80px;
+    border-radius: 10px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-align: center;
+    line-height: 1.3;
+  }
+  .album-info { flex: 1; min-width: 0; }
+  .album-type {
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    opacity: 0.7;
+  }
+  .album-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(20px, 3vw, 28px);
+    letter-spacing: 0.04em;
+    line-height: 1.1;
+    margin-bottom: 6px;
+  }
+  .album-date {
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+  .album-tagline {
+    font-size: 13px;
+    color: rgba(240,237,230,0.65);
+    line-height: 1.5;
+    font-style: italic;
+    font-family: 'Noto Serif KR', serif;
+    font-weight: 300;
+  }
+  .album-toggle {
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 6px 14px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+    align-self: flex-start;
+    margin-top: 4px;
+  }
+  .album-toggle:hover { background: rgba(255,255,255,0.06); color: var(--fg); }
+
+  /* ── TRACKLIST ── */
+  .tracklist {
+    display: none;
+    border-top: 1px solid var(--border);
+  }
+  .tracklist.open { display: block; }
+  .mbti-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 1rem 2rem;
+    border-bottom: 1px solid var(--border);
+    background: rgba(0,0,0,0.2);
+  }
+  .mbti-pill {
+    font-size: 10px;
+    padding: 3px 10px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.15s;
+    letter-spacing: 0.05em;
+  }
+  .mbti-pill:hover { border-color: rgba(255,255,255,0.2); color: var(--fg); }
+  .mbti-pill.active { background: rgba(255,255,255,0.1); color: var(--fg); border-color: rgba(255,255,255,0.3); }
+  .track-list { padding: 0.5rem 0; }
+  .track-row {
+    border-bottom: 1px solid var(--border);
+    transition: background 0.15s;
+  }
+  .track-row:last-child { border-bottom: none; }
+  .track-row:hover { background: rgba(255,255,255,0.02); }
+  .track-row-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 2rem;
+    cursor: pointer;
+  }
+  .track-n { font-size: 11px; color: var(--muted); min-width: 20px; }
+  .track-name { flex: 1; font-size: 14px; font-weight: 400; }
+  .track-tags { display: flex; gap: 5px; flex-wrap: wrap; }
+  .t-tag {
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-weight: 500;
+    letter-spacing: 0.03em;
+    white-space: nowrap;
+  }
+  .t-mbti { background: rgba(167,139,250,0.15); color: #c4b5fd; border: 1px solid rgba(167,139,250,0.2); }
+  .t-theme { border: 1px solid var(--border); color: var(--muted); background: transparent; }
+  .track-dur { font-size: 11px; color: var(--muted); white-space: nowrap; }
+  .track-chev { font-size: 11px; color: var(--muted); transition: transform 0.2s; }
+  .track-chev.open { transform: rotate(180deg); }
+  .track-detail {
+    display: none;
+    padding: 0 2rem 1.25rem 3.5rem;
+  }
+  .track-detail.open { display: block; }
+  .detail-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+  .detail-section h5 {
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+  .detail-section p { font-size: 13px; color: rgba(240,237,230,0.75); line-height: 1.65; }
+  .lyric-quote {
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-family: 'Noto Serif KR', serif;
+    font-size: 13px;
+    font-weight: 300;
+    font-style: italic;
+    line-height: 1.7;
+    color: rgba(240,237,230,0.8);
+    border-left: 3px solid;
+  }
+  .intensity-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+  .intensity-label { font-size: 10px; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; }
+  .pip { width: 7px; height: 7px; border-radius: 50%; background: rgba(255,255,255,0.1); }
+  .pip.on { background: currentColor; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align: center;
+    padding: 3rem 2rem;
+    color: var(--muted);
+    font-size: 12px;
+    border-top: 1px solid var(--border);
+    letter-spacing: 0.08em;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 640px) {
+    .detail-grid { grid-template-columns: 1fr; }
+    .album-card-header { flex-wrap: wrap; }
+    .track-tags { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-noise"></div>
+  <div class="hero-content">
+    <p class="hero-eyebrow">방탄소년단 · Complete Discography</p>
+    <h1 class="hero-title">B<span>T</span>S</h1>
+    <p class="hero-sub">2013 – Present · Every album · Every EP · Every single · Fully analysed</p>
+  </div>
+  <div class="hero-scroll">
+    <div class="scroll-line"></div>
+    <span>Scroll</span>
+  </div>
+</section>
+
+<nav id="main-nav">
+  <div class="nav-inner" id="nav-inner"></div>
+</nav>
+
+<main id="main-content"></main>
+
+<footer>
+  <p>방탄소년단 (BTS) — 2013 to Present</p>
+  <p style="margin-top:6px;font-size:11px;opacity:0.5">Track analysis for educational & fan purposes</p>
+</footer>
+
+<script>
+const DISCOGRAPHY = [
+  {
+    era: "School Trilogy",
+    eraId: "school",
+    albums: [
+      {
+        id: "ool2013", type: "EP", title: "O!RUL8,2?", date: "Sep 11, 2013",
+        tagline: "A letter to youth: are you too late? BTS's debut mini-album channels raw teenage frustration into hip-hop rebellion.",
+        color: { bg: "#1a2a1a", accent: "#4ade80", text: "#bbf7d0" },
+        tracks: [
+          { n:1, t:"Intro: O!RUL8,2?", d:"1:39", mbti:"ENTP", theme:"Youth manifesto", meaning:"RM's spoken-word intro sets the tone — a challenge to society's timetables for success. Raw, unpolished, and intentionally confrontational.", character:"Cerebral and provocative, dismantling assumptions through sharp rhetoric.", lyric:"Are you too late? / No, you're right on time / It's your life, not theirs", mood:4 },
+          { n:2, t:"N.O", d:"3:41", mbti:"ENFJ", theme:"Education critique", meaning:"BTS's breakout single — a fierce critique of Korean education pressure that grinds students into identical machines. Musically indebted to early 2000s hip-hop.", character:"Passionate and rallying, speaking for the many who feel trapped by systems.", lyric:"Who made us this way / Stop, take a breath / N.O, N.O", mood:5 },
+          { n:3, t:"We Are Bulletproof Pt.2", d:"3:38", mbti:"ISTP", theme:"Proving doubters wrong", meaning:"A direct address to critics who dismissed BTS before debut. Hard-edged and defiant, establishing the 'bulletproof' identity that would define the group.", character:"Independent and action-oriented — letting results silence critics.", lyric:"We are bulletproof / Can't stop us now / We've made it this far", mood:5 },
+          { n:4, t:"Skit: R U Happy?", d:"2:03", mbti:"ESFJ", theme:"Real talk", meaning:"An unscripted conversation about what happiness means at their age — one of the first 'skit' tracks that became a BTS trademark.", character:"Warm and community-oriented, finding meaning in honest shared conversation.", lyric:"[Unscripted] Are we happy right now? / I think so... maybe", mood:2 },
+          { n:5, t:"If I Ruled the World", d:"3:49", mbti:"ENFP", theme:"Dreaming big", meaning:"A playful but sincere fantasy about what the members would do with unlimited power. Jangly, melodic, and full of teenage idealism.", character:"Imaginative and altruistic — dreaming as a form of hope.", lyric:"If I ruled the world / There'd be no more tears / Just dreams and stars", mood:3 },
+          { n:6, t:"Coffee", d:"3:33", mbti:"ISFP", theme:"Bittersweet longing", meaning:"A gentle metaphor comparing a lover to coffee — comforting but leaving you wanting more. Shows the vocal line's softer side.", character:"Quietly expressive, finding emotional depth in everyday sensory experience.", lyric:"You're like coffee / Bitter and sweet / I keep coming back for more", mood:2 },
+          { n:7, t:"BTS Cypher Pt.1", d:"3:47", mbti:"ENTP", theme:"Rap flex", meaning:"The first of the iconic Cypher series — the rap line showing technical prowess and competitive fire. Establishes the chemistry between RM, Suga, and j-hope.", character:"Intellectually combative, thriving in verbal competition.", lyric:"I came from the bottom / Now I'm climbing / No ceiling can hold me", mood:5 },
+          { n:8, t:"Attack on Bangtan", d:"3:37", mbti:"ISTP", theme:"Battle anthem", meaning:"An anime-influenced battle bop — BTS as warriors storming impossible odds. Energetic, silly, and unabashedly fun.", character:"Practical and bold, thriving under pressure with a hint of theatre.", lyric:"Attack on Bangtan / We're bulletproof / Nothing can stop us", mood:5 },
+          { n:9, t:"Paldogangsan", d:"3:54", mbti:"ESFJ", theme:"Regional pride & unity", meaning:"Each member raps in their hometown dialect — a playful celebration of Korean regional identity that doubles as a bonding exercise.", character:"Communal and joyful, finding identity through shared origin stories.", lyric:"From every corner of Korea / We came together / This is who we are", mood:4 },
+          { n:10, t:"Outro: Luv in Skool", d:"3:41", mbti:"ENFP", theme:"Innocent first love", meaning:"A sweet, melodic closer about school-day crushes. Pulls back all the aggression of the album for one moment of pure, unguarded sweetness.", character:"Open-hearted and spontaneous, unashamed of soft feelings.", lyric:"I see you in the hallway / My heart beats faster / Is this what love is?", mood:2 }
+        ]
+      },
+      {
+        id: "skool2", type: "EP", title: "Skool Luv Affair", date: "Feb 12, 2014",
+        tagline: "First love examined with urgency — the trilogy's emotional peak before adulthood arrives.",
+        color: { bg: "#1a1a2e", accent: "#818cf8", text: "#c7d2fe" },
+        tracks: [
+          { n:1, t:"Intro: Skool Luv Affair", d:"1:22", mbti:"ENFP", theme:"Love's arrival", meaning:"A brief, orchestral intro that signals a shift in tone — from rebellion to vulnerability. Love has arrived, and BTS doesn't quite know what to do with it.", character:"Spontaneous and open, caught off-guard by genuine feeling.", lyric:"Love has found me / I wasn't ready / But here it is", mood:2 },
+          { n:2, t:"Boy In Luv", d:"3:49", mbti:"ENFJ", theme:"Desperate first love", meaning:"The lead single and a fan favourite — intense, almost aggressive devotion that borders on frustration. A raw portrait of loving someone who doesn't notice you.", character:"Charismatic but emotionally volatile, channelling longing into intensity.", lyric:"I want to be your oppa / But you just pass me by / Notice me", mood:5 },
+          { n:3, t:"Skit: Soulmate", d:"2:13", mbti:"ESFJ", theme:"Friendship as love", meaning:"An interlude exploring whether the deepest love is found in friendship — a recurring BTS theme. The members riff on what it means to truly know someone.", character:"Deeply relational, finding security through honest human connection.", lyric:"[Unscripted] The people who know us best... aren't they our real soulmates?", mood:2 },
+          { n:4, t:"Where You From", d:"3:38", mbti:"ENTP", theme:"Curiosity & attraction", meaning:"A playful track with a retro feel — falling for someone whose origins are a mystery. Lighter and more comedic than the album's emotional centrepieces.", character:"Curious and quick-witted, attracted by what they don't yet understand.", lyric:"Where are you from / What made you this way / I want to know everything", mood:3 },
+          { n:5, t:"Just One Day", d:"3:51", mbti:"INFP", theme:"Modest longing", meaning:"Perhaps the purest love song in early BTS — a wish for just one day with someone, nothing more. Soft, melodic, and heartbreakingly restrained.", character:"Introspective and idealistic, expressing love through imagination rather than action.", lyric:"Just one day / One day with you / That would be enough for me", mood:1 },
+          { n:6, t:"Tomorrow", d:"4:12", mbti:"INTJ", theme:"Fear of the future", meaning:"A sleeper-hit that became a fan anthem — honestly addressing the terror of growing up without a clear path. More thematically mature than the album's surface suggests.", character:"Strategic and self-aware, confronting fear through disciplined honesty.", lyric:"Even if today is cruel / Tomorrow will come / Just hold on", mood:3 },
+          { n:7, t:"BTS Cypher Pt.2: Triptych", d:"4:34", mbti:"ENTP", theme:"Individual identities", meaning:"Each rapper defines themselves: Suga's bleakness, j-hope's brightness, RM's leadership. The most revealing Cypher in terms of individual character.", character:"Intellectually distinct — three different minds, one shared fire.", lyric:"I am who I am / Not what you made me / This is Cypher Pt.2", mood:5 },
+          { n:8, t:"Spine Breaker", d:"3:34", mbti:"ENFJ", theme:"Consumerism critique", meaning:"A surprisingly pointed commentary on parents breaking their backs to buy expensive North Face jackets for status-hungry teens. Funny, pointed, and deeply Korean in context.", character:"Socially conscious and outspoken, using humour to make uncomfortable points.", lyric:"Your parents' spine breaks / To buy that jacket / Is it worth it?", mood:4 },
+          { n:9, t:"Jump", d:"3:35", mbti:"ISTP", theme:"Pure energy", meaning:"The most carefree track BTS ever made — an instruction to jump and forget everything else. Built for concerts, not analysis.", character:"Action-first, finding freedom in physical release rather than reflection.", lyric:"Jump / Jump / Jump / Forget everything and just jump", mood:5 }
+        ]
+      },
+      {
+        id: "darkwild", type: "Studio Album", title: "Dark & Wild", date: "Aug 20, 2014",
+        tagline: "The wild side of love — BTS's debut full-length explores passion, pain, and the chaos between them.",
+        color: { bg: "#1f0a0a", accent: "#f87171", text: "#fecaca" },
+        tracks: [
+          { n:1, t:"Intro: What Am I To You", d:"2:36", mbti:"INFP", theme:"Uncertain devotion", meaning:"RM's vulnerable intro asks the raw question underlying all of Dark & Wild — is this love mutual, or is it one-sided projection? Sets an unsettled emotional foundation.", character:"Deeply introspective, sitting with uncertainty rather than rushing to resolve it.", lyric:"What am I to you / Just a passing phase / Or something more", mood:2 },
+          { n:2, t:"Danger", d:"3:57", mbti:"ENFJ", theme:"Love's threat", meaning:"The lead single — love recast as something genuinely dangerous. Urgent, anxious, and melodically explosive. The vocal line's belting contrasts with the rapline's controlled aggression.", character:"Intense and passionate, unable to stay calm in the face of overwhelming feeling.", lyric:"You're a danger to me / But I can't stay away / Come closer", mood:5 },
+          { n:3, t:"War of Hormone", d:"3:37", mbti:"ISTP", theme:"Hormonal chaos", meaning:"A deliberately provocative and (in retrospect) immature track about being overwhelmed by attraction. BTS have since expressed discomfort with it — an important footnote in their growth.", character:"Impulsive and physical, unfiltered at the expense of nuance.", lyric:"This war of hormones / I can't control it / You're driving me crazy", mood:5 },
+          { n:4, t:"Hip Hop Lover", d:"3:35", mbti:"ENTP", theme:"Music as first love", meaning:"A love letter to hip-hop before any human relationship — declaring that the genre formed them. Deeply sincere beneath the swagger.", character:"Intellectually devoted, finding identity and belonging through artistic obsession.", lyric:"Hip hop was my first love / Before anyone else / It made me who I am", mood:4 },
+          { n:5, t:"Let Me Know", d:"4:06", mbti:"INFP", theme:"Asking for honesty", meaning:"One of the most emotionally raw vocal line performances in early BTS. A plea for truth over comfortable lies — is this love over or not?", character:"Sensitive and honest, unable to live in comfortable ambiguity.", lyric:"Let me know if it's over / Don't leave me guessing / I can handle the truth", mood:2 },
+          { n:6, t:"Rain", d:"3:47", mbti:"ISFP", theme:"Melancholy solitude", meaning:"A moody, atmospheric track where rain becomes a metaphor for loneliness. Suga wrote it to process his own isolation — one of his earliest emotional confessions.", character:"Quietly expressive, finding beauty in sadness without flinching.", lyric:"The rain reminds me of you / Both fall without warning / Both leave me cold", mood:1 },
+          { n:7, t:"BTS Cypher Pt.3: Killer", d:"4:28", mbti:"ENTP", theme:"Lyrical dominance", meaning:"Widely considered the best Cypher — each rapper at their sharpest. Features some of RM and Suga's most technically impressive verses. A benchmark for Korean hip-hop.", character:"Fiercely competitive and technically precise — intellectual combat at its purest.", lyric:"I came, I saw, I conquered / Words are my weapon / Cypher Pt.3: Killer", mood:5 },
+          { n:8, t:"Interlude: Whalien 52", d:"3:56", mbti:"INFP", theme:"Loneliness of uniqueness", meaning:"Based on the real 52-Hz whale — a creature whose frequency is unique, meaning no other whale can hear it. A metaphor for feeling profoundly alone despite being surrounded by people.", character:"Deeply introspective, processing isolation through poetic metaphor.", lyric:"I'm the 52 Hz whale / Calling out / But no one hears my frequency", mood:1 },
+          { n:9, t:"The Rise of Bangtan", d:"3:32", mbti:"ISTP", theme:"Origin & arrival", meaning:"A triumphant recap of how far they've come — a contrast to the vulnerability elsewhere on the album. Energetic and purposeful.", character:"Self-reliant and proud, letting the journey speak for itself.", lyric:"We rose from nothing / Now here we stand / This is just the beginning", mood:5 },
+          { n:10, t:"Hormone War", d:"3:37", mbti:"ENFP", theme:"Chaotic attraction", meaning:"A more playful take on attraction — messy, funny, and self-aware. The contrast with the album's darker tracks is intentional.", character:"Spontaneous and self-mocking, finding humour in emotional chaos.", lyric:"This is war / Every look you give me / Sends my hormones into battle", mood:4 },
+          { n:11, t:"Look Here", d:"3:40", mbti:"ENFJ", theme:"Demanding attention", meaning:"Smooth R&B asking a lover to finally look at what's been in front of them all along. The vocal line shines.", character:"Warm but insistent — connection requires mutual acknowledgment.", lyric:"Look here / I've been waiting / All you have to do is see me", mood:3 },
+          { n:12, t:"2nd Grade", d:"3:44", mbti:"ENTP", theme:"Sophomore confidence", meaning:"A reflection on their second year — both proud and restless. The sense of being caught between emerging and arriving.", character:"Analytically self-aware, using milestones to recalibrate ambition.", lyric:"We're in second grade now / We know more / We want more", mood:4 },
+          { n:13, t:"Outro: Does That Make Sense?", d:"3:49", mbti:"INFP", theme:"Questioning everything", meaning:"RM closes the album asking if any of this — love, fame, youth — actually makes sense. A fitting end to BTS's wildest, most chaotic album.", character:"Reflective and questioning, refusing easy conclusions.", lyric:"Does this make sense? / Does love make sense? / Does any of it?", mood:2 }
+        ]
+      }
+    ]
+  },
+  {
+    era: "HYYH (花樣年華)",
+    eraId: "hyyh",
+    albums: [
+      {
+        id: "hyyh1", type: "EP", title: "The Most Beautiful Moment in Life Pt.1", date: "Apr 29, 2015",
+        tagline: "Youth frozen in amber — the first chapter of BTS's most beloved story cycle.",
+        color: { bg: "#0a1a2a", accent: "#38bdf8", text: "#bae6fd" },
+        tracks: [
+          { n:1, t:"Intro: The Most Beautiful Moment in Life", d:"0:51", mbti:"ISFP", theme:"Youth's fragility", meaning:"A brief orchestral intro that establishes the HYYH world — beauty and ephemerality intertwined. Sets up the entire arc with emotional weight before a single word is spoken.", character:"Aesthetically attuned, finding the sacred in fleeting moments.", lyric:"The most beautiful moment / Is the one that's passing", mood:1 },
+          { n:2, t:"I Need U", d:"3:40", mbti:"INFP", theme:"Desperate love", meaning:"One of BTS's most defining singles — a breakthrough moment. The MV introduced the HYYH cinematic universe. Musically delicate, emotionally devastating. The boys are clearly hurting.", character:"Deeply introspective, unable to function without the one they love.", lyric:"I need you / I need you so badly / Without you I'm nothing", mood:3 },
+          { n:3, t:"Hold Me Tight", d:"3:44", mbti:"ENFJ", theme:"Fear of losing", meaning:"A sweet, almost desperate melody asking a lover to stay. The vocal line's harmonies are some of the most beautiful in early BTS.", character:"Warmly expressive — love as something you hold onto before it disappears.", lyric:"Hold me tight / Before I disappear / Don't let go", mood:2 },
+          { n:4, t:"Skit: Expectation", d:"3:12", mbti:"ESFJ", theme:"Honest reflection", meaning:"The members discuss the gap between who they are and who fans expect — a candid moment of self-awareness at a pivotal career juncture.", character:"Community-oriented and honest, valuing authentic connection over image.", lyric:"[Unscripted] Do we live up to what they see in us?", mood:2 },
+          { n:5, t:"Dope", d:"3:36", mbti:"ISTP", theme:"Hard work vs. play", meaning:"A high-energy banger contrasting BTS's gruelling schedule with peers who partied — every hour of sacrifice made into swagger. One of their most beloved tracks.", character:"Efficient and driven — finding identity in discipline and results.", lyric:"I've been working hard / While you were playing / Now watch me shine", mood:5 },
+          { n:6, t:"Boyz with Fun", d:"3:34", mbti:"ENFP", theme:"Carefree joy", meaning:"Pure energy and camaraderie — seven friends who genuinely enjoy each other. One of BTS's most joyful recordings.", character:"Spontaneous and magnetic, turning any moment into a celebration.", lyric:"We're the boys with fun / Come join us / Life is better this way", mood:5 },
+          { n:7, t:"Converse High", d:"3:12", mbti:"ESFJ", theme:"Simple affection", meaning:"An endearing track about falling for someone who wears Converse — a love song about noticing small, specific details. Remarkably human in its modesty.", character:"Attentive and warm, finding devotion in the particular rather than the general.", lyric:"Your Converse highs / The way you tie them / I notice everything", mood:3 },
+          { n:8, t:"Moving On", d:"3:59", mbti:"INTJ", theme:"Leaving the past", meaning:"About moving out of the dorm they grew up in — literally and emotionally. A farewell to shared poverty, shared dreams, shared beginning.", character:"Strategic but sentimental, processing endings with clear-eyed emotional honesty.", lyric:"We're moving on / Leaving this place behind / But it stays inside us", mood:2 },
+          { n:9, t:"Outro: Love is Not Over", d:"4:01", mbti:"INFP", theme:"Love's persistence", meaning:"A sweeping, piano-driven closer. Love doesn't end cleanly — it lingers, changes shape, refuses to resolve. One of the most quietly devastating BTS outros.", character:"Deeply introspective, sitting with grief rather than rushing through it.", lyric:"Love is not over / Not yet / I can still feel it everywhere", mood:1 }
+        ]
+      },
+      {
+        id: "hyyh2", type: "EP", title: "The Most Beautiful Moment in Life Pt.2", date: "Nov 30, 2015",
+        tagline: "Youth turning dark — the HYYH arc deepens, shadows lengthen, and the boys begin to fracture.",
+        color: { bg: "#0f0f1a", accent: "#a78bfa", text: "#ddd6fe" },
+        tracks: [
+          { n:1, t:"Intro: Never Mind", d:"2:44", mbti:"INTJ", theme:"Scars as strength", meaning:"Suga's intro — a raw, almost shouted manifesto: if you crash, accelerate through it. Born from his own years of hardship and near-quitting. One of the most personal BTS tracks.", character:"Fiercely self-reliant, transforming pain into forward momentum.", lyric:"If you feel you might fall / Just accelerate harder / Never mind the scars", mood:5 },
+          { n:2, t:"Run", d:"3:55", mbti:"ENFP", theme:"Reckless love", meaning:"The lead single — a choice to run blindly into love even knowing it might destroy you. The HYYH MV universe deepens here. Visually and sonically one of BTS's most cinematic moments.", character:"Spontaneous and all-in, choosing experience over safety.", lyric:"Run run run / Even if I fall / I'll keep running toward you", mood:5 },
+          { n:3, t:"Butterfly", d:"4:41", mbti:"INFP", theme:"Fragile belonging", meaning:"A hauntingly beautiful track about fearing that happiness will dissolve like a butterfly you've tried to hold. One of the most emotionally complex songs in the HYYH saga.", character:"Deeply introspective — knowing something is too good to keep makes it more precious.", lyric:"Am I dreaming / Don't disappear / You're like a butterfly", mood:1 },
+          { n:4, t:"Whalien 52", d:"3:56", mbti:"INFP", theme:"Loneliness of uniqueness", meaning:"A full version here — the 52 Hz whale's isolation as a metaphor for feeling unheard despite desperately calling out. Works as a companion piece to Rain from Dark & Wild.", character:"Quiet and sorrowful, expressing pain through natural imagery.", lyric:"Nobody can hear me / My frequency is wrong / 52 Hz of silence", mood:1 },
+          { n:5, t:"Ma City", d:"3:36", mbti:"ESFJ", theme:"Hometown pride", meaning:"Each member representing their hometown city — Gwangju, Ilsan, Daegu, Geochang, Busan, Seoul. A joyful geography lesson wrapped in a banger.", character:"Community-rooted, drawing strength from origin and belonging.", lyric:"My city, my people / This is where I'm from / This is who I am", mood:4 },
+          { n:6, t:"Silver Spoon (Baepsae)", d:"3:36", mbti:"ENTP", theme:"Class critique", meaning:"A generational critique of Korea's 'spoon theory' — gold, silver, and dirt spoons determining life outcomes by birth. The crow-tit (baepsae) straining to walk like a stork. Arguably BTS's most politically sharp moment.", character:"Intellectually combative, using wit to expose structural inequality.", lyric:"They say try hard / But the game was rigged / My spoon isn't silver", mood:4 },
+          { n:7, t:"Skit: One Night in a Strange City", d:"3:08", mbti:"ESFJ", theme:"Wonder & gratitude", meaning:"The members reflect on performing in a foreign city for the first time — disorientation mixed with awe. A snapshot of early global success.", character:"Open and communal, finding meaning through shared new experiences.", lyric:"[Unscripted] Can you believe where we are right now?", mood:3 },
+          { n:8, t:"Beautiful", d:"3:41", mbti:"ISFP", theme:"Present-moment beauty", meaning:"An ode to youth's beauty precisely because it's temporary. One of BTS's most musically rich vocal tracks.", character:"Aesthetically attuned, finding meaning in what cannot be held.", lyric:"This moment is beautiful / Because it will not last / Hold it gently", mood:2 },
+          { n:9, t:"Outro: House of Cards", d:"4:24", mbti:"INTJ", theme:"Inevitable collapse", meaning:"A gorgeous, melancholy closer about a love built like a house of cards — intricate, beautiful, and doomed. Foreshadows the darkness that deepens in Young Forever.", character:"Perceptive and fatalistic, watching something beautiful fall apart without turning away.", lyric:"This house of cards we built / So carefully / Will it last the night", mood:1 }
+        ]
+      },
+      {
+        id: "youngforever", type: "Compilation", title: "The Most Beautiful Moment in Life: Young Forever", date: "May 2, 2016",
+        tagline: "The HYYH anthology — new tracks bookend the era's conclusion, asking if youth was all a dream.",
+        color: { bg: "#0f1a0a", accent: "#86efac", text: "#bbf7d0" },
+        tracks: [
+          { n:1, t:"Epilogue: Young Forever", d:"4:51", mbti:"INFP", theme:"Youth's end & acceptance", meaning:"The emotional capstone of the entire HYYH era. Accepting that youth ends — but it was real, it was beautiful, and it will always have existed. BTS at their most philosophically mature to this point.", character:"Reflective and at peace, finding meaning in transience rather than fighting it.", lyric:"Forever we are young / Even when the world ends / This moment was real", mood:2 },
+          { n:2, t:"Fire", d:"3:23", mbti:"ENFP", theme:"Burning it down", meaning:"A deliberately unhinged banger — after all the HYYH introspection, a pure adrenaline release. 'Burning' youth before it disappears. Became a live staple.", character:"Exuberantly uncontainable, choosing combustion over careful preservation.", lyric:"Burn it up / FIRE / We're young so what / Let's burn it all", mood:5 },
+          { n:3, t:"Save Me", d:"3:49", mbti:"ENFJ", theme:"Rescued by love", meaning:"A fragile, urgent plea that works both as a love song and as a message to fans who have found solace in BTS. The dual reading became intentional.", character:"Openly vulnerable — finding the courage to ask for help.", lyric:"Save me / I can't breathe without you / Only you can bring me back", mood:3 }
+        ]
+      }
+    ]
+  },
+  {
+    era: "Wings",
+    eraId: "wings",
+    albums: [
+      {
+        id: "wings", type: "Studio Album", title: "Wings", date: "Oct 10, 2016",
+        tagline: "Temptation, growth, and the fall — BTS's most conceptually ambitious album, inspired by Hermann Hesse's Demian.",
+        color: { bg: "#1a0f0a", accent: "#fb923c", text: "#fed7aa" },
+        tracks: [
+          { n:1, t:"Intro: Boy Meets Evil", d:"3:24", mbti:"INTJ", theme:"Temptation's allure", meaning:"j-hope's dance-led intro — temptation as a beautiful stranger who promises everything. His best pre-solo performance, mixing vulnerability with stunning physicality.", character:"Disciplined but secretly drawn to chaos — calculating the cost of surrender.", lyric:"The boy met evil / And it was beautiful / He should have run", mood:4 },
+          { n:2, t:"Blood Sweat & Tears", d:"3:38", mbti:"ENFJ", theme:"Willing corruption", meaning:"The lead single and a landmark — BTS choosing temptation with open eyes. The most seductive sound in their catalogue, drenched in Baroque imagery. References Demian, Bruegel, and Nietzsche.", character:"Charismatic and self-aware, surrendering to something beautiful while knowing the cost.", lyric:"Cover my eyes / Cover my ears / But I want this sin", mood:5 },
+          { n:3, t:"Begin", d:"3:36", mbti:"ISFP", theme:"Jungkook's origin", meaning:"Jungkook's solo — about coming to Seoul at age 15 and being shaped by his hyungs. Quietly devastating in its simplicity: before them, he didn't know who he was.", character:"Open and formative — finding self through the influence of those who love you.", lyric:"Without you / I don't know who I'd be / You completed me", mood:2 },
+          { n:4, t:"Lie", d:"3:55", mbti:"INFP", theme:"Jimin's internal war", meaning:"Jimin's solo — a haunting, swirling confession of fighting against himself. One of the most vocally adventurous tracks on the album. The distorted production mirrors fractured identity.", character:"Deeply introspective, trapped between who they are and who they're told to be.", lyric:"I'm lying to myself / Caught in a lie / I can't escape", mood:3 },
+          { n:5, t:"Stigma", d:"3:52", mbti:"INFP", theme:"V's guilt", meaning:"V's solo — a deeply personal confession of having to hide pain from family. The stigma of difference, of artistic sensitivity in a world that doesn't value it.", character:"Inward and searching, carrying grief that can't be fully expressed.", lyric:"I have sinned against you / Forgive me / This stigma won't wash off", mood:2 },
+          { n:6, t:"First Love", d:"4:56", mbti:"ISFP", theme:"Suga's piano", meaning:"Suga's solo — a literal autobiography about his relationship with the piano, from childhood obsession to near-abandonment to reunion. One of the most honest tracks in BTS's entire catalogue.", character:"Quietly devoted, expressing love most purely through sustained artistic commitment.", lyric:"My first love was not a person / It was a piano / It saved me", mood:2 },
+          { n:7, t:"Reflection", d:"4:21", mbti:"INTJ", theme:"RM's self-doubt", meaning:"RM's solo — a walk through Ttukseom Park at night, asking why he can't love himself. The most vulnerable he had been to that point, and the foundation for the entire Love Yourself arc.", character:"Analytically self-critical, using reflection as both tool and burden.", lyric:"I wish I could love myself / But when I look in the mirror / I don't know what I see", mood:1 },
+          { n:8, t:"MAMA", d:"4:00", mbti:"ENFP", theme:"j-hope's gratitude", meaning:"j-hope's solo — a tribute to his mother who sacrificed everything for his dream. The most emotionally direct track on Wings, built around a simple gospel chord.", character:"Spontaneously emotional, love expressed without filter or artifice.", lyric:"Mama / Thank you / Everything I have is because of you", mood:3 },
+          { n:9, t:"Awake", d:"4:09", mbti:"INFP", theme:"Jin's acceptance", meaning:"Jin's solo — about knowing he may never be as talented as his members, but choosing to keep running anyway. Quietly heartbreaking. 'Six flowers, and I' is one of BTS's most resonant images.", character:"Gentle and self-aware, finding courage in honest limitation rather than false confidence.", lyric:"Maybe I can never fly / Maybe I can never touch the sky / But I'll still reach for it", mood:2 },
+          { n:10, t:"Lost", d:"4:02", mbti:"ENFJ", theme:"Shared uncertainty", meaning:"A full group track about being lost together — the comfort of collective confusion. Musically gentle, emotionally communal.", character:"Warmly rallying, finding meaning in shared vulnerability.", lyric:"We're all lost / But we're lost together / That's enough", mood:2 },
+          { n:11, t:"BTS Cypher Pt.4", d:"4:08", mbti:"ISTP", theme:"Final cypher: ascent", meaning:"The final official Cypher — the most polished and confident of the four. Each rapper has clearly grown. RM's verse in particular is a masterclass in controlled aggression.", character:"Self-reliant and assured, letting technical mastery speak for itself.", lyric:"You tried to silence me / But here I am / This is Cypher 4", mood:5 },
+          { n:12, t:"Am I Wrong", d:"3:37", mbti:"ENTP", theme:"Social critique", meaning:"A funk-influenced critique of societal numbness — people scrolling past atrocities, calling it 'the new normal.' BTS's most overtly political group track.", character:"Intellectually confrontational, using wit to demand discomfort.", lyric:"Am I wrong for calling this out / Or is the world just mad / Something is broken here", mood:4 },
+          { n:13, t:"21st Century Girl", d:"3:27", mbti:"ENFP", theme:"Female empowerment", meaning:"A bright, empowering message to women — you are enough exactly as you are. One of BTS's most straightforwardly uplifting tracks.", character:"Exuberant and affirming, using energy to uplift rather than impress.", lyric:"21st century girl / You are enough / Own your story", mood:5 },
+          { n:14, t:"2! 3!", d:"4:26", mbti:"ESFJ", theme:"Promise to ARMY", meaning:"Written for ARMY — a count to three before releasing pain, together. One of the most tear-inducing fan service tracks ever made, not from sentimentality but genuine sincerity.", character:"Community-devoted, drawing strength from the commitment to others.", lyric:"One, two, three / Let it go / You're not alone", mood:2 },
+          { n:15, t:"Interlude: Wings", d:"2:26", mbti:"INFP", theme:"Soaring free", meaning:"A sweeping, cinematic interlude that captures the album's central image — wings as both freedom and burden. Emotionally open and sonically gorgeous.", character:"Dreaming outward, finding liberation in imagination.", lyric:"Spread your wings / Even if you fall / At least you flew", mood:3 }
+        ]
+      },
+      {
+        id: "youneverneed", type: "EP", title: "You Never Walk Alone", date: "Feb 13, 2017",
+        tagline: "A repackage with a message: no matter how lost, you are never alone — a bridge between Wings and Love Yourself.",
+        color: { bg: "#0a0f1a", accent: "#60a5fa", text: "#bfdbfe" },
+        tracks: [
+          { n:1, t:"Spring Day", d:"4:28", mbti:"INFP", theme:"Missing someone", meaning:"One of BTS's most beloved songs ever — a meditation on longing, loss, and the stubborn hope of spring. References Ursula K. Le Guin's 'The Ones Who Walk Away from Omelas.' Timeless.", character:"Deeply introspective, holding grief and hope simultaneously without resolution.", lyric:"I miss you / When I say that / How much time has to pass / Before I can see you again", mood:1 },
+          { n:2, t:"Not Today", d:"3:50", mbti:"ENFJ", theme:"Resistance anthem", meaning:"A battle cry for those who've been told they'll fail — not today. Designed for mass catharsis, and it delivers.", character:"Rallying and unwavering, channelling collective frustration into forward force.", lyric:"All the underdogs in the world / Not today / We rise together", mood:5 },
+          { n:3, t:"Outro: Wings", d:"3:15", mbti:"ENFP", theme:"Flying together", meaning:"A joyful, uplifting outro about flying — but crucially, flying together rather than alone. Ties the You Never Walk Alone theme into the Wings narrative.", character:"Open and generous, finding joy most complete when shared.", lyric:"Fly together / We have wings / And we'll use them", mood:4 },
+          { n:4, t:"A Supplementary Story: You Never Walk Alone", d:"3:48", mbti:"ESFJ", theme:"Companionship in darkness", meaning:"The title track of the repackage — a quiet, deeply sincere promise that wherever you are, you are accompanied. Became a comfort anthem for many ARMY.", character:"Warmly communal, expressing devotion through presence rather than grand gesture.", lyric:"Wherever you are / I'll be beside you / You never walk alone", mood:1 }
+        ]
+      }
+    ]
+  },
+  {
+    era: "Love Yourself",
+    eraId: "loveyourself",
+    albums: [
+      {
+        id: "ly-her", type: "EP", title: "Love Yourself: Her", date: "Sep 18, 2017",
+        tagline: "The beginning of love — euphoric, fated, and destined to complicate everything.",
+        color: { bg: "#1a0a14", accent: "#f472b6", text: "#fbcfe8" },
+        tracks: [
+          { n:1, t:"Intro: Serendipity", d:"3:56", mbti:"ISFP", theme:"Destined love", meaning:"Jimin's weightless solo intro — love as cosmic destiny. The Smeraldo flower mythology begins here. Sets up the trilogy's central question: is this love real, or a beautiful illusion?", character:"Quietly expressive, channelling deep emotion through beauty and sensory metaphor.", lyric:"I'm the universe's answer / Just by existing / I became your world", mood:2 },
+          { n:2, t:"DNA", d:"3:42", mbti:"ENFP", theme:"Love as fate", meaning:"BTS's first Hot 100 top-10 hit. Love framed as biological certainty rather than choice — the maximalist pop anthem that changed their trajectory forever.", character:"Boundlessly enthusiastic, translating big abstract ideas into immediate irresistible feeling.", lyric:"From the moment of the Big Bang / This universe was made for us", mood:5 },
+          { n:3, t:"Best of Me (ft. The Chainsmokers)", d:"3:25", mbti:"ENFJ", theme:"You complete me", meaning:"A Western crossover bid with The Chainsmokers. Lyrically direct — the beloved brings out the narrator's best self.", character:"Warm and affirming, finding identity through genuine connection.", lyric:"You are the best part of me / Everything I have is yours", mood:4 },
+          { n:4, t:"Dimple (Illegal)", d:"3:36", mbti:"ESFJ", theme:"Playful infatuation", meaning:"Comedic and charming — a dimple that feels like a crime. A deliberate tonal counterweight to the heavier material.", character:"Socially warm, using humour and affection to connect.", lyric:"Your dimple is dangerous / It should be illegal", mood:3 },
+          { n:5, t:"Pied Piper", d:"3:36", mbti:"ENTP", theme:"Meta-commentary on fandom", meaning:"BTS addressing ARMY directly — almost scolding over-devotion. Self-referential and intellectually bold.", character:"Cerebral and contrarian, saying uncomfortable truths through seductive delivery.", lyric:"Stop, my fan / Put down your phone / Follow me instead", mood:3 },
+          { n:6, t:"Skit: Billboard Music Awards Speech", d:"3:36", mbti:"ESFJ", theme:"Gratitude & arrival", meaning:"Unscripted audio of BTS winning at the 2017 BBMAs — raw, tearful, disbelieving joy. A documentary moment inside the album.", character:"Genuine and community-oriented, expressing emotion without filter.", lyric:"[Unscripted] We never imagined standing here / Thank you ARMY", mood:2 },
+          { n:7, t:"MIC Drop", d:"3:43", mbti:"ISTP", theme:"Defiance & vindication", meaning:"Post-BBMAs confidence — a flex track for everyone who doubted them. The Steve Aoki remix became a global hit.", character:"Self-reliant and direct, letting the record speak.", lyric:"Did you see my bag? / I don't need your validation / MIC drop", mood:5 },
+          { n:8, t:"Go Go", d:"3:33", mbti:"ENFP", theme:"YOLO economics", meaning:"A satirical critique of Korean youth's spend-now coping mechanism in a bleak job market. Catchy surface, quietly devastating core.", character:"Energetic, masking anxiety about the future through celebration.", lyric:"Spending all my money on my youth / YOLO", mood:5 },
+          { n:9, t:"Outro: Her", d:"3:40", mbti:"INFP", theme:"Devotion to the muse", meaning:"RM closes with 'her' referring simultaneously to music, love, and ARMY — a triple meaning that ties love as creative force.", character:"Reflective and inner-directed, finding meaning through interior emotional work.", lyric:"She is my universe / She made me who I am", mood:2 }
+        ]
+      },
+      {
+        id: "ly-tear", type: "Studio Album", title: "Love Yourself: Tear", date: "May 18, 2018",
+        tagline: "The illusion shatters — the most emotionally confrontational chapter of the trilogy, and BTS's first #1 on the Billboard 200.",
+        color: { bg: "#0f0a1f", accent: "#a78bfa", text: "#ede9fe" },
+        tracks: [
+          { n:1, t:"Intro: Singularity", d:"3:59", mbti:"INFP", theme:"Suppressed self", meaning:"V's haunting baritone in a world of masks — which self is real? Sets the album's existential stakes through neo-soul and spoken word.", character:"Deeply introspective, living in tension between authentic emotion and the persona constructed for love.", lyric:"I covered your mouth / And buried my voice / And grew a flower in the frozen lake", mood:3 },
+          { n:2, t:"Fake Love", d:"4:02", mbti:"ENFJ", theme:"Performative devotion", meaning:"BTS's first Hot 100 top-10 hit — a confession that they became someone else to be loved. The 'I-Land' concept is born here.", character:"Charismatic people-pleaser who reshapes identity around others, losing themselves.", lyric:"I grew a flower that can't bloom / In the name of you / It was all fake love", mood:5 },
+          { n:3, t:"The Truth Untold (ft. Steve Aoki)", d:"4:00", mbti:"INFP", theme:"Beautiful isolation", meaning:"Inspired by the Smeraldo legend — love too fragile to survive revelation. The most vocally vulnerable track.", character:"Sensitive, convinced their truest self would drive love away.", lyric:"I still want you / Even if I can't hold your hand", mood:2 },
+          { n:4, t:"134340", d:"4:02", mbti:"INTJ", theme:"Rejection & orbit", meaning:"Named for Pluto's reclassification — stripped of belonging. Cold, spacey production mirrors alienation.", character:"Analytical, processing grief through abstraction.", lyric:"I'm still here in the same place / Helplessly / You've erased me", mood:3 },
+          { n:5, t:"Paradise", d:"3:44", mbti:"ENFP", theme:"Redefining success", meaning:"A counterpoint of warmth — arguing that existing and dreaming without destination is enough.", character:"Enthusiastic and values-driven, pushing back against achievement culture.", lyric:"It's okay to not have a dream / If your heart races / That's enough", mood:2 },
+          { n:6, t:"Love Maze", d:"3:34", mbti:"ENFJ", theme:"Holding on together", meaning:"Six voices choosing not to let go even when lost — one of the album's most anthemic moments.", character:"Warmly persuasive, drawing others forward through shared commitment.", lyric:"Don't be trapped in someone else's dream / Hold my hand", mood:4 },
+          { n:7, t:"Magic Shop", d:"4:02", mbti:"INFP", theme:"Internal sanctuary", meaning:"Written by Jungkook, referencing James Doty's technique: open a door in your heart to find safety. A mutual gift to ARMY.", character:"Quietly empathetic, building inner worlds as refuge from pain.", lyric:"Trade your pain for a star / In the Magic Shop", mood:1 },
+          { n:8, t:"Airplane Pt.2", d:"3:43", mbti:"ISTP", theme:"Fame's vertigo", meaning:"A Latin-tinged reflection on globetrotting success that still feels hollow — three distinct rap voices.", character:"Self-reliant, thriving in motion but questioning the meaning of arrival.", lyric:"Flying first class / Still feels empty / Still looking for home", mood:4 },
+          { n:9, t:"Anpanman", d:"3:22", mbti:"ENFP", theme:"Humble heroism", meaning:"Named after the Japanese character who gives pieces of himself away. Heroism as giving what you have, even when it costs you.", character:"Altruistic — finding purpose in being useful rather than impressive.", lyric:"I'm not a superhero / But I'll lend you my shoulder", mood:5 },
+          { n:10, t:"So What", d:"3:10", mbti:"ISTP", theme:"Cathartic defiance", meaning:"After all the introspection — a decision to just live anyway. Deliberately rough, purposeful exhale before the closer.", character:"Action-oriented, cutting through overthinking with unapologetic energy.", lyric:"Love, hate, just live, so what / Live however you want", mood:5 },
+          { n:11, t:"Outro: Tear", d:"4:00", mbti:"INTJ", theme:"Dissolution of illusion", meaning:"The rapline tears away from false love and constructed identity. RM, Suga, j-hope each process grief differently. Structurally bold ending.", character:"Strategic, confronting hard truths — ending what no longer serves.", lyric:"I thought love was eternal / But it was a fantasy / Goodbye my love", mood:4 }
+        ]
+      },
+      {
+        id: "ly-answer", type: "Compilation", title: "Love Yourself: Answer", date: "Aug 24, 2018",
+        tagline: "The answer was always within — the trilogy's resolution through self-love, featuring new tracks that close the arc.",
+        color: { bg: "#031a0f", accent: "#34d399", text: "#a7f3d0" },
+        tracks: [
+          { n:1, t:"Intro: Euphoria", d:"5:43", mbti:"ENFP", theme:"Joy of self-discovery", meaning:"Jungkook's soaring solo — euphoria as the feeling of loving yourself without condition. The longest intro in the series.", character:"Open, radiant, and idealistic, expressing joy as a full-body experience.", lyric:"I want to be your euphoria / Your utopia", mood:4 },
+          { n:2, t:"Trivia: Just Dance", d:"3:59", mbti:"ENFP", theme:"Love as movement", meaning:"j-hope's solo trivia — love expressed through dance, his defining art form. Deeply personal and authentic.", character:"Kinetic and joyful, understanding the world through physical expression.", lyric:"I dance to the music of the universe", mood:4 },
+          { n:3, t:"Serendipity (Full Length)", d:"4:24", mbti:"ISFP", theme:"Destined love (expanded)", meaning:"Jimin's Her intro as a complete song. The full version deepens the cosmic love mythology.", character:"Gently expressive, finding the sacred in small, beautiful details.", lyric:"Maybe this was all predetermined / You and I were always going to meet", mood:2 },
+          { n:4, t:"Trivia: Love", d:"3:36", mbti:"ENFJ", theme:"Love as language", meaning:"RM's trivia — love as a word that gains meaning through use. Cerebral but emotionally grounded.", character:"Perceptive and articulate, building bridges between thought and feeling.", lyric:"The more I say it / The more I feel it / The more it becomes real", mood:3 },
+          { n:5, t:"Trivia: Seesaw", d:"4:08", mbti:"INTJ", theme:"Relationship equilibrium", meaning:"Suga's trivia — the starkest of the three. A relationship as a seesaw: one rises when the other falls. The only resolution: step off.", character:"Analytical, refusing comfortable illusions in favour of difficult truths.", lyric:"We go up and down / One of us must lose / The only way out is to stop playing", mood:3 },
+          { n:6, t:"Idol", d:"3:43", mbti:"ENFP", theme:"Radical self-acceptance", meaning:"The trilogy's centrepiece — BTS's most confident self-love statement. Blends Korean pansori with global trap. 'You can't stop me loving myself' is the trilogy's thesis.", character:"Boldly expressive, rejecting external validation for authentic self-display.", lyric:"You can't stop me loving myself / I know what I am / I'm proud of it", mood:5 },
+          { n:7, t:"Answer: Love Myself", d:"3:34", mbti:"ISFP", theme:"The answer", meaning:"The quiet resolution of everything. The answer to the trilogy's question: love yourself — not as destination but as daily practice.", character:"Inward and at peace, expressing hard-won clarity through gentleness.", lyric:"The answer was always within me / Love yourself / That is the answer", mood:1 }
+        ]
+      }
+    ]
+  },
+  {
+    era: "Map of the Soul",
+    eraId: "mots",
+    albums: [
+      {
+        id: "mots-persona", type: "EP", title: "Map of the Soul: Persona", date: "Apr 12, 2019",
+        tagline: "The mask we show the world — Jung's Persona examined through RM's self-interrogation and the group's global peak.",
+        color: { bg: "#1a0f00", accent: "#fbbf24", text: "#fef3c7" },
+        tracks: [
+          { n:1, t:"Intro: Persona", d:"4:18", mbti:"INTJ", theme:"Who am I?", meaning:"RM's philosophical intro — wrestling with the gap between his performing self and his private self. The most self-aware he'd been since Reflection. References his 'Answer' to self-love as still unresolved.", character:"Analytically self-interrogating, refusing easy answers about identity.", lyric:"Who am I / The question I've had all my life / Am I the me that you see?", mood:3 },
+          { n:2, t:"Boy With Luv (ft. Halsey)", d:"3:51", mbti:"ENFP", theme:"Small love, big meaning", meaning:"A deliberate pivot from grand romantic gestures to tiny, specific moments of care. The Halsey collaboration made it a global crossover moment. Pastel, sweet, and precisely engineered.", character:"Warm and detail-oriented, finding that small gestures carry the most weight.", lyric:"Oh my / My darling / I want to know your small things", mood:4 },
+          { n:3, t:"Make It Right", d:"3:37", mbti:"ENFJ", theme:"Repairing love", meaning:"A gentle anthem about fixing what's broken in a relationship — or in yourself. Later remixed with Lauv.", character:"Warm and determined, choosing repair over abandonment.", lyric:"I want to make it right / No matter what it takes / I'll fix this", mood:3 },
+          { n:4, t:"Jamais Vu", d:"3:44", mbti:"INFP", theme:"Forgetting & rediscovery", meaning:"Jin's and Jungkook's emotional collaboration about jamais vu — the opposite of déjà vu, when the familiar feels utterly strange. About loving something so much it becomes new again.", character:"Introspective and quietly searching, moved by what most people overlook.", lyric:"The familiar feels so strange / I've forgotten / But also found again", mood:2 },
+          { n:5, t:"Dionysus", d:"4:05", mbti:"ENTP", theme:"Art as intoxication", meaning:"A chaotic, Greek-mythology-tinged banger about the intoxication of creative work. Dionysus as the god of wine and theatre. BTS as artists drunk on their own craft.", character:"Intellectually provocative, thriving on creative excess and rule-breaking.", lyric:"I'm intoxicated / Not by wine / But by art", mood:5 }
+        ]
+      },
+      {
+        id: "mots7", type: "Studio Album", title: "Map of the Soul: 7", date: "Feb 21, 2020",
+        tagline: "Seven years, seven members, seven Jungian archetypes — BTS's most expansive and personally revealing album.",
+        color: { bg: "#0a0a0f", accent: "#818cf8", text: "#e0e7ff" },
+        tracks: [
+          { n:1, t:"Intro: Persona", d:"4:18", mbti:"INTJ", theme:"Identity's question", meaning:"RM's Persona intro reprised — the journey begins again, but deeper.", character:"Analytically self-interrogating, the question of identity always unresolved.", lyric:"Who am I / The question I've had / The question I'll always have", mood:3 },
+          { n:2, t:"Black Swan", d:"3:59", mbti:"INFP", theme:"Fear of losing passion", meaning:"The pre-release that became a fan favourite. Based on Martha Graham's quote about the fear of not being moved by art anymore. What happens if music stops feeling alive?", character:"Deeply introspective, more afraid of emotional numbness than failure.", lyric:"If this is the last time music moves me / Let me die here / Don't let me go numb", mood:2 },
+          { n:3, t:"Filter", d:"3:31", mbti:"ENFJ", theme:"Jimin's fluidity", meaning:"Jimin's solo — a provocative, glittering exploration of his ability to become whatever his audience desires. A sophisticated statement about performance, identity, and desire.", character:"Charismatic and self-aware, using adaptability as both gift and power.", lyric:"I can be whatever you need / Which filter do you want?", mood:4 },
+          { n:4, t:"My Time", d:"3:54", mbti:"ISFP", theme:"Jungkook's lost youth", meaning:"Jungkook reflects on joining BTS at 15 — all the normal teenage years he missed while becoming a global star. Quietly melancholy beneath the smooth R&B surface.", character:"Inward and wistful, mourning experiences that were bypassed without realising.", lyric:"At 15 I came here / My time went differently / I wonder what I missed", mood:2 },
+          { n:5, t:"Louder than Bombs", d:"3:47", mbti:"INTJ", theme:"Vulnerability as power", meaning:"An English-heavy track (with Troye Sivan's DNA) about speaking your pain louder than what drowns it out. Strategically vulnerable.", character:"Measured but intense, deploying honesty as a deliberate, powerful act.", lyric:"Louder than bombs / My voice / Breaking every wall", mood:4 },
+          { n:6, t:"ON", d:"4:06", mbti:"ENFJ", theme:"Rising against all odds", meaning:"The lead single — BTS's most anthemic since Not Today. Marching-band energy, cinematic scale, a declaration that they'll keep going no matter what hits them.", character:"Rallying and unwavering, transforming hardship into forward momentum.", lyric:"Hit me, hit me / I can take it / Can't hold me down / I'm ON", mood:5 },
+          { n:7, t:"UGH!", d:"3:41", mbti:"ENTP", theme:"Hate culture critique", meaning:"The rap line's sharpest social commentary — on online hate, mob mentality, and the performative outrage economy. Confrontational and technically superb.", character:"Intellectually combative, turning disgust into precision-targeted critique.", lyric:"Your hate says more about you / Than it does about me / UGH", mood:5 },
+          { n:8, t:"00:00 (Zero O'Clock)", d:"3:52", mbti:"ESFJ", theme:"Reset & renewal", meaning:"A comforting, almost hymn-like track — at midnight, everything resets. You get another chance. One of BTS's most genuinely comforting recordings.", character:"Communal and gentle, offering reassurance without false cheer.", lyric:"At zero o'clock / It all resets / You get to try again", mood:1 },
+          { n:9, t:"Inner Child", d:"3:52", mbti:"ISFP", theme:"V's past self", meaning:"V's solo — a deeply moving letter to his younger self, asking him to hold on and promising that it gets better. One of the most emotionally direct tracks on the album.", character:"Tenderly expressive, finding healing through compassion for one's past.", lyric:"Don't worry little boy / You'll be okay / I'll come find you", mood:2 },
+          { n:10, t:"Friends", d:"3:35", mbti:"ESFJ", theme:"Jimin & V's friendship", meaning:"Jimin and V's duet — a joyful celebration of their ten-year friendship. Deliberately playful and sincere, resisting sentimental cliché through specificity.", character:"Warmly communal, finding love most complete in long-term friendship.", lyric:"You're my best friend / Still strange to say it / But it's true", mood:4 },
+          { n:11, t:"Respect", d:"3:02", mbti:"ENTP", theme:"RM & Suga's dynamic", meaning:"RM and Suga's conversational duet — mutual admiration expressed through playful one-upmanship. One of the funniest and most human tracks BTS has made.", character:"Cerebrally competitive but deeply loyal — respect as the highest compliment.", lyric:"You've got swag / You've got brain / I've got both / We've got each other", mood:4 },
+          { n:12, t:"We are Bulletproof: the Eternal", d:"3:49", mbti:"ESFJ", theme:"Seven-year gratitude", meaning:"The emotional centrepiece of the album — a callback to their debut's 'We Are Bulletproof.' Seven years of gratitude, failure, survival, and love compressed into one track.", character:"Communal and deeply sincere, expressing love for the collective journey.", lyric:"We started from nothing / Seven years later / We are still bulletproof", mood:2 },
+          { n:13, t:"Jamais Vu", d:"3:44", mbti:"INFP", theme:"Forgetting & rediscovery", meaning:"Reprised from Persona — in the full album context it gains new weight as part of the Jungian shadow examination.", character:"Quietly searching, moved by the familiar made strange.", lyric:"The familiar feels so strange / I've forgotten / But found again", mood:2 },
+          { n:14, t:"Dionysus", d:"4:05", mbti:"ENTP", theme:"Art as intoxication", meaning:"Reprised from Persona — the drunkenness of creation recurs as a theme across the expanded album.", character:"Thriving on creative excess, using art to transcend ordinary identity.", lyric:"I'm intoxicated / Not by wine / But by art itself", mood:5 },
+          { n:15, t:"Outro: Ego", d:"3:50", mbti:"ENFP", theme:"j-hope's acceptance", meaning:"j-hope's jubilant outro — about accepting his full self, ego and all. 'My track record speaks for itself.' One of the most joyful closers in BTS's catalogue.", character:"Exuberantly self-accepting, finding freedom in owning your whole history.", lyric:"My ego says yes / My past says yes / I say yes / This is me", mood:5 }
+        ]
+      }
+    ]
+  },
+  {
+    era: "BE & Butter Era",
+    eraId: "be",
+    albums: [
+      {
+        id: "be", type: "Studio Album", title: "BE", date: "Nov 20, 2020",
+        tagline: "Made during lockdown, for everyone in lockdown — BTS's most intimate album, written to say: we'll get through this.",
+        color: { bg: "#0a0f0a", accent: "#4ade80", text: "#bbf7d0" },
+        tracks: [
+          { n:1, t:"Life Goes On", d:"3:27", mbti:"ISFP", theme:"Pandemic comfort", meaning:"Written and released during COVID-19 lockdown — a gentle assurance that life continues even when the world stops. BTS's first #1 Hot 100 debut. Remarkably still.", character:"Quietly expressive, finding solace in the simple persistence of things.", lyric:"Life goes on / Like an old song / Like a film that never ends", mood:1 },
+          { n:2, t:"Fly to My Room", d:"3:44", mbti:"INFP", theme:"Confined dreaming", meaning:"About finding adventure in the limitations of a room — dreaming as travel when travel is impossible. The vocal line subunit at their most intimate.", character:"Inward and imaginative, making the interior world expansive.", lyric:"My room became the world / I fly without moving", mood:2 },
+          { n:3, t:"Blue & Grey", d:"4:14", mbti:"INFP", theme:"Burnout & emptiness", meaning:"V and RM's deeply personal song about exhaustion — the grey feeling of not knowing why you're sad. One of the most honest emotional portraits in BTS's catalogue.", character:"Introspective and unflinching, refusing to perform wellness when it isn't there.", lyric:"Where is the blue sky / Where did my light go / I'm in grey", mood:1 },
+          { n:4, t:"Telepathy", d:"3:39", mbti:"ENFP", theme:"Missing ARMY", meaning:"A bubbly, playful track about the strange intimacy of being connected to millions of people you've never met. About missing concerts and fans during lockdown.", character:"Spontaneous and warmly outgoing, expressing connection through imagination.", lyric:"I think of you / Without meeting / Isn't that telepathy?", mood:4 },
+          { n:5, t:"Dis-ease", d:"3:44", mbti:"ENTP", theme:"Anxiety & restlessness", meaning:"j-hope's raw expression of the discomfort of forced stillness — always needing to move, to do, suddenly unable to. One of his most honest tracks.", character:"Restlessly active, confronting the anxiety of inaction with characteristic directness.", lyric:"I'm sick with dis-ease / Can't sit still / Is this what rest feels like?", mood:4 },
+          { n:6, t:"Stay", d:"3:08", mbti:"ESFJ", theme:"Staying together", meaning:"The most straightforward track on BE — a simple promise to stay through everything. Written for ARMY during uncertain times.", character:"Warmly communal, finding security in the simple act of remaining.", lyric:"Let's stay together / Through all of it / I'll stay", mood:3 },
+          { n:7, t:"Dynamite", d:"3:19", mbti:"ENFP", theme:"Pure joy, full English", meaning:"BTS's first fully English single — a deliberate gift of energy during lockdown. Throwback disco-pop with no ambition beyond making you feel good. It worked.", character:"Exuberantly uncontainable, using joy as an intentional act of care.", lyric:"I'm diamond, you know I glow up / Light it up like dynamite", mood:5 }
+        ]
+      },
+      {
+        id: "butter-single", type: "Single", title: "Butter / Permission to Dance", date: "May 21, 2021",
+        tagline: "Smooth, sweet, and built for summer — BTS's double English single era.",
+        color: { bg: "#1a1500", accent: "#fcd34d", text: "#fef9c3" },
+        tracks: [
+          { n:1, t:"Butter", d:"2:42", mbti:"ISTP", theme:"Effortless cool", meaning:"A meticulously engineered confidence track — every element designed to feel smooth. Spent ten non-consecutive weeks at #1 on the Hot 100.", character:"Efficient and self-assured, thriving through precision rather than emotion.", lyric:"Smooth like butter / Cool like summer / Everything I do just hits different", mood:5 },
+          { n:2, t:"Permission to Dance", d:"3:14", mbti:"ENFP", theme:"Dance as liberation", meaning:"A follow-up single using international sign language gestures in the choreography. Permission to feel good, to move, to just exist joyfully.", character:"Spontaneously generous, giving others permission to express themselves.", lyric:"We don't need permission to dance / Just move / That's all", mood:5 }
+        ]
+      }
+    ]
+  },
+  {
+    era: "Anthology & Solo Era",
+    eraId: "anthology",
+    albums: [
+      {
+        id: "proof", type: "Anthology", title: "Proof", date: "Jun 10, 2022",
+        tagline: "Nine years of proof — a three-disc anthology marking BTS's milestone with demos, deep cuts, and new tracks.",
+        color: { bg: "#0f0a0a", accent: "#e2a065", text: "#fde8c8" },
+        tracks: [
+          { n:1, t:"Born Singer", d:"4:12", mbti:"INFP", theme:"Calling & sacrifice", meaning:"A cover of J. Cole's 'Born Sinner' remade as BTS's origin story. Originally performed at their first concert — finally officially released. About being born to do this, no matter the cost.", character:"Introspective and devoted, finding identity through artistic vocation.", lyric:"I was born a singer / Not by choice / By necessity", mood:3 },
+          { n:2, t:"Yet to Come (The Most Beautiful Moment)", d:"3:15", mbti:"ENFJ", theme:"Future as best moment", meaning:"The lead single and emotional centrepiece of Proof — the idea that despite everything they've achieved, the best is still ahead. A mature, peaceful reframing of ambition.", character:"Forward-looking and warmly hopeful, finding motivation in future possibility rather than past achievement.", lyric:"The best moment is yet to come / All of this / Was just the beginning", mood:3 },
+          { n:3, t:"Run BTS", d:"3:04", mbti:"ISTP", theme:"Pure energy, no filter", meaning:"A high-energy, chaotic group track that sounds like it was made for the sheer fun of it. Fan favourite instantly.", character:"Action-first, finding freedom in movement and collective energy.", lyric:"Run BTS / Go BTS / Never stop", mood:5 },
+          { n:4, t:"For Youth", d:"3:41", mbti:"ESFJ", theme:"Gratitude for shared journey", meaning:"A tender, communal reflection on growing up together — addressed to each other and to ARMY. The quietest and most sincere track on Proof.", character:"Deeply relational, finding completeness in long-term shared experience.", lyric:"Thank you for growing up with me / This youth / Was ours", mood:1 }
+        ]
+      },
+      {
+        id: "face", type: "Solo Mini Album", title: "FACE (Jimin)", date: "Mar 24, 2023",
+        tagline: "Jimin's debut solo album — confronting emptiness and finding self through six bare, introspective tracks.",
+        color: { bg: "#0a0a14", accent: "#93c5fd", text: "#dbeafe" },
+        tracks: [
+          { n:1, t:"Face-off (Intro)", d:"1:43", mbti:"INFP", theme:"Self-confrontation", meaning:"A dissonant spoken-word intro — Jimin confronting the mirror. This album will not be comfortable, and the intro promises that immediately.", character:"Deeply introspective, choosing truth over comfort.", lyric:"Face it / No more hiding / No more masks", mood:3 },
+          { n:2, t:"Interlude: Dive", d:"2:05", mbti:"ISFP", theme:"Submerging inward", meaning:"An ambient interlude — the sensation of going underwater into your own mind. Aurally one of the most distinctive things in BTS's solo catalogue.", character:"Aesthetically attuned, processing emotion through immersive sensory experience.", lyric:"Diving down / Into myself / How deep does it go", mood:1 },
+          { n:3, t:"Like Crazy", d:"3:46", mbti:"ENFP", theme:"Choosing feeling over logic", meaning:"The lead single — a joyful, glitchy pop track about choosing to feel everything even when it makes no rational sense. Like Crazy became his first Hot 100 #1.", character:"Spontaneously emotional, prioritising lived experience over careful self-protection.", lyric:"Like crazy / I fall / But I choose to fall", mood:4 },
+          { n:4, t:"Alone", d:"3:34", mbti:"INFP", theme:"Fame's isolation", meaning:"One of the most honest tracks about what global stardom feels like from the inside — surrounded by millions, alone in a crowd.", character:"Quietly sorrowful, sitting with a loneliness that success cannot solve.", lyric:"Even in the crowd / I am alone / The lights don't reach this far inside", mood:1 },
+          { n:5, t:"Set Me Free Pt.2", d:"3:06", mbti:"ENFJ", theme:"Liberation from expectations", meaning:"A dramatic, orchestral plea for release from the expectations — industry, cultural, personal — that have constrained him. His most emotionally large-scale solo performance.", character:"Passionately expressive, needing external acknowledgment of internal change.", lyric:"Set me free / I am not what you made me / I am more", mood:5 },
+          { n:6, t:"Like Crazy (English version)", d:"3:46", mbti:"ENFP", theme:"Choosing feeling", meaning:"A direct English translation — allowing the emotion to reach further without losing specificity.", character:"Generous and open, wanting the feeling shared as widely as possible.", lyric:"Like crazy / I keep falling / And I wouldn't change a thing", mood:4 }
+        ]
+      },
+      {
+        id: "d-day", type: "Solo Studio Album", title: "D-DAY (Suga / Agust D)", date: "Apr 21, 2023",
+        tagline: "The final Agust D chapter — an unflinching reckoning with fame, mental health, and the cost of a dream.",
+        color: { bg: "#0f0f0f", accent: "#d1d5db", text: "#f3f4f6" },
+        tracks: [
+          { n:1, t:"D-DAY", d:"3:11", mbti:"INTJ", theme:"Final reckoning", meaning:"The album opener and title track — D-Day as judgment day for everything Agust D has built and fought through. Cold, precise, and final.", character:"Strategically decisive, drawing a line under the past to move forward.", lyric:"This is D-Day / Everything ends here / Everything begins here", mood:5 },
+          { n:2, t:"HUH?! (ft. j-hope)", d:"2:53", mbti:"ENTP", theme:"Industry critique", meaning:"A chaotic, self-aware dis track at industry pretension. Suga and j-hope sparring and laughing — the chemistry is unmistakable.", character:"Intellectually combative, taking nothing seriously in order to expose everything.", lyric:"HUH? / You really said that / Let me respond", mood:5 },
+          { n:3, t:"Haegeum", d:"3:12", mbti:"INTJ", theme:"Breaking free", meaning:"Named after the Korean string instrument. About the paradox of restrictions — being freed by confronting them directly. Production uses actual haegeum samples.", character:"Systematic and bold, seeing structure clearly enough to dismantle it.", lyric:"Like a haegeum's string / Tightly wound / Until it breaks free", mood:4 },
+          { n:4, t:"Polar Night", d:"3:56", mbti:"INFP", theme:"Depression's silence", meaning:"Perhaps Suga's most direct expression of depression — the polar night as metaphor for extended darkness without visible end. Quiet, devastating, essential.", character:"Honest to the point of discomfort, refusing to dress up pain in palatable language.", lyric:"In the polar night / There is no dawn / I wait anyway", mood:1 },
+          { n:5, t:"People Pt.2", d:"3:23", mbti:"INTJ", theme:"Human impermanence", meaning:"A meditation on people who pass through your life — the painful beauty of temporary connection. Features IU in the original; the album version stands alone.", character:"Analytically tender, accepting that attachment always contains loss.", lyric:"People come and go / Like seasons / I'm still here", mood:2 },
+          { n:6, t:"Snooze (ft. Ryuichi Sakamoto)", d:"4:14", mbti:"ISFP", theme:"Permission to rest", meaning:"The final track before Ryuichi Sakamoto's death gave it extra weight — a gentle lullaby about letting yourself sleep when you're exhausted. One of the most quietly beautiful tracks in the Agust D trilogy.", character:"Tender and unhurried, finding wisdom in stillness.", lyric:"You can sleep a little longer / Rest is not surrender / Close your eyes", mood:1 },
+          { n:7, t:"Amygdala", d:"4:27", mbti:"INFP", theme:"Trauma's neuroscience", meaning:"Suga processes childhood trauma — his father's illness, his 2011 car accident — through the lens of the amygdala, the brain's fear centre. Unflinching, therapeutic, extraordinary.", character:"Deeply introspective, processing pain with clinical precision and raw vulnerability simultaneously.", lyric:"My amygdala remembers / What I tried to forget / The body keeps the score", mood:2 }
+        ]
+      },
+      {
+        id: "golden", type: "Solo Studio Album", title: "Golden (Jungkook)", date: "Nov 3, 2023",
+        tagline: "Jungkook steps into his own — a confident, all-English debut solo album exploring love and identity at 26.",
+        color: { bg: "#1a1200", accent: "#fbbf24", text: "#fef3c7" },
+        tracks: [
+          { n:1, t:"Closer to You (ft. Major Lazer)", d:"2:58", mbti:"ENFP", theme:"Wanting closeness", meaning:"A warm, island-tinged opener — uncomplicated desire for nearness. Sets the album's tone: direct, warm, and emotionally honest.", character:"Open and generous, expressing desire without pretence.", lyric:"Every day every night / I want to be closer to you", mood:3 },
+          { n:2, t:"3D (ft. Jack Harlow)", d:"3:06", mbti:"ISTP", theme:"Physical longing", meaning:"One of the most explicitly sensual tracks in BTS's solo catalogue — missing someone in the physical dimension. Jack Harlow's verse adds levity.", character:"Direct and physical, cutting through emotional complexity with honest desire.", lyric:"I want you in 3D / Not through a screen / Real", mood:4 },
+          { n:3, t:"Standing Next to You", d:"3:29", mbti:"ENFJ", theme:"Devoted presence", meaning:"The lead single — retro funk and unwavering devotion. The promise to stand beside someone through everything.", character:"Warmly steadfast, expressing love through commitment rather than intensity.", lyric:"I'll be standing next to you / Through it all / That's my promise", mood:5 },
+          { n:4, t:"Seven (ft. Latto)", d:"2:51", mbti:"ENFP", theme:"Love every day", meaning:"Jungkook's pre-album single and first solo #1 — about loving someone every day of the week, forever. Bright, immediate, and impossibly catchy.", character:"Enthusiastically devoted, finding romance in rhythm and repetition.", lyric:"Monday, Tuesday, Wednesday / Thursday, Friday / I love you every day", mood:5 },
+          { n:5, t:"Too Sad to Dance", d:"3:15", mbti:"INFP", theme:"Heartbreak's paralysis", meaning:"The album's emotional core — so sad that even dance, Jungkook's defining art, becomes impossible. One of the most vulnerable tracks on Golden.", character:"Introspective and devastated, honest about pain without performing it.", lyric:"I'm too sad to dance / Too broken to move / Just sitting here", mood:1 },
+          { n:6, t:"Hate You", d:"2:53", mbti:"ISTP", theme:"Loving what hurts", meaning:"A complicated emotional confession — hating someone for what they do to you while being unable to stop wanting them.", character:"Pragmatic and conflicted, acknowledging contradiction without resolving it.", lyric:"I hate you / For making me feel this way / I hate that I don't hate you", mood:4 },
+          { n:7, t:"Yes or No", d:"3:09", mbti:"ENFJ", theme:"Asking for certainty", meaning:"A plea for clarity — after all the ambiguity, just tell me: yes or no. Warm and melodically generous.", character:"Direct and emotionally clear, needing honesty to move forward.", lyric:"Yes or no / That's all I need / Just tell me where we stand", mood:3 }
+        ]
+      }
+    ]
+  }
+];
+
+const ALL_MBTIS = ['INFP','ENFJ','ISTP','ENFP','INTJ','ESFJ','ISFP','ENTP','ISFJ','INTP'];
+
+function buildNav() {
+  const nav = document.getElementById('nav-inner');
+  nav.innerHTML = '<div class="nav-era active" onclick="scrollToEra(\'school\',this)">School</div>' +
+    '<div class="nav-era" onclick="scrollToEra(\'hyyh\',this)">HYYH</div>' +
+    '<div class="nav-era" onclick="scrollToEra(\'wings\',this)">Wings</div>' +
+    '<div class="nav-era" onclick="scrollToEra(\'loveyourself\',this)">Love Yourself</div>' +
+    '<div class="nav-era" onclick="scrollToEra(\'mots\',this)">Map of the Soul</div>' +
+    '<div class="nav-era" onclick="scrollToEra(\'be\',this)">BE Era</div>' +
+    '<div class="nav-era" onclick="scrollToEra(\'anthology\',this)">Anthology & Solo</div>';
+}
+
+function scrollToEra(id, el) {
+  document.querySelectorAll('.nav-era').forEach(e => e.classList.remove('active'));
+  el.classList.add('active');
+  const target = document.getElementById('era-' + id);
+  if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function coverStyle(color) {
+  return `background: ${color.bg}; border: 1px solid ${color.accent}40; color: ${color.text};`;
+}
+
+function pipDots(mood, accent) {
+  return Array.from({length:5}, (_,i) =>
+    `<div class="pip${i < mood ? ' on' : ''}" style="color:${accent}"></div>`
+  ).join('');
+}
+
+function buildAlbum(al) {
+  const c = al.color;
+  const mbtiSet = [...new Set(al.tracks.map(t => t.mbti))];
+  const pillsHtml = `<button class="mbti-pill active" onclick="filterMbti('${al.id}','all',this)">All</button>` +
+    mbtiSet.map(m => `<button class="mbti-pill" onclick="filterMbti('${al.id}','${m}',this)">${m}</button>`).join('');
+
+  const tracksHtml = al.tracks.map(t => {
+    const themeClass = `t-theme`;
+    return `<div class="track-row" data-mbti="${t.mbti}" data-album="${al.id}">
+      <div class="track-row-header" onclick="toggleTrack(this)">
+        <span class="track-n">${t.n}</span>
+        <span class="track-name">${t.t}</span>
+        <div class="track-tags">
+          <span class="t-tag t-mbti">${t.mbti}</span>
+          <span class="t-tag ${themeClass}" style="color:${c.text};border-color:${c.accent}40">${t.theme}</span>
+        </div>
+        <span class="track-dur">${t.d}</span>
+        <span class="track-chev">▾</span>
+      </div>
+      <div class="track-detail">
+        <div class="intensity-row">
+          <span class="intensity-label">Intensity</span>
+          <div style="display:flex;gap:3px">${pipDots(t.mood, c.accent)}</div>
+        </div>
+        <div class="detail-grid">
+          <div class="detail-section"><h5>Meaning</h5><p>${t.meaning}</p></div>
+          <div class="detail-section"><h5>MBTI lens</h5><p>${t.character}</p></div>
+        </div>
+        <div class="lyric-quote" style="background:${c.bg};border-left-color:${c.accent}">${t.lyric}</div>
+      </div>
+    </div>`;
+  }).join('');
+
+  return `<div class="album-card" id="album-${al.id}" style="border-color:${c.accent}20">
+    <div class="album-card-header" style="background:${c.bg}10" onclick="toggleAlbum('${al.id}')">
+      <div class="album-cover" style="${coverStyle(c)}">${al.title.split(':').join('\n')}</div>
+      <div class="album-info">
+        <div class="album-type" style="color:${c.accent}">${al.type}</div>
+        <div class="album-title">${al.title}</div>
+        <div class="album-date">${al.date} · ${al.tracks.length} tracks</div>
+        <div class="album-tagline">${al.tagline}</div>
+      </div>
+      <button class="album-toggle" style="border-color:${c.accent}40;color:${c.accent}" onclick="event.stopPropagation();toggleAlbum('${al.id}')">Show tracks ▾</button>
+    </div>
+    <div class="tracklist" id="tl-${al.id}">
+      <div class="mbti-bar">${pillsHtml}</div>
+      <div class="track-list">${tracksHtml}</div>
+    </div>
+  </div>`;
+}
+
+function buildPage() {
+  const main = document.getElementById('main-content');
+  main.innerHTML = DISCOGRAPHY.map(era => `
+    <div class="era-block" id="era-${era.eraId}">
+      <div class="era-header">
+        <span class="era-label">Era</span>
+        <h2 class="era-name">${era.era}</h2>
+      </div>
+      <div class="album-grid">${era.albums.map(buildAlbum).join('')}</div>
+    </div>
+  `).join('');
+}
+
+function toggleAlbum(id) {
+  const tl = document.getElementById('tl-' + id);
+  const btn = document.querySelector(`#album-${id} .album-toggle`);
+  tl.classList.toggle('open');
+  if (btn) btn.textContent = tl.classList.contains('open') ? 'Hide tracks ▴' : 'Show tracks ▾';
+}
+
+function toggleTrack(header) {
+  const detail = header.nextElementSibling;
+  const chev = header.querySelector('.track-chev');
+  detail.classList.toggle('open');
+  chev.classList.toggle('open');
+}
+
+function filterMbti(albumId, mbti, btn) {
+  const tl = document.getElementById('tl-' + albumId);
+  tl.querySelectorAll('.mbti-pill').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  tl.querySelectorAll('.track-row').forEach(row => {
+    row.style.display = (mbti === 'all' || row.dataset.mbti === mbti) ? 'block' : 'none';
+  });
+}
+
+// Scroll spy
+function setupScrollSpy() {
+  const eras = DISCOGRAPHY.map(e => ({ id: e.eraId, el: document.getElementById('era-' + e.eraId) }));
+  const navItems = document.querySelectorAll('.nav-era');
+  window.addEventListener('scroll', () => {
+    let current = eras[0].id;
+    eras.forEach(e => { if (e.el && window.scrollY >= e.el.offsetTop - 100) current = e.id; });
+    navItems.forEach((n, i) => {
+      n.classList.toggle('active', DISCOGRAPHY[i].eraId === current);
+    });
+  });
+}
+
+buildNav();
+buildPage();
+setupScrollSpy();
+</script>
+</body>
+</html>
